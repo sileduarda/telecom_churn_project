@@ -1,70 +1,80 @@
-# Previsão de Churn - Telecom
+# 🚀 Previsão de Churn - Telecom
 
-Este projeto foi desenvolvido com o objetivo de criar um modelo preditivo capaz de identificar clientes que têm maior risco de **churn** (cancelamento do serviço) em uma empresa de telecomunicações.
+Este projeto tem como objetivo desenvolver um **modelo preditivo de churn** para uma empresa de telecomunicações, identificando clientes com maior risco de cancelar o serviço.  
 
-O projeto também conta com um **app interativo em Streamlit**, permitindo o upload de dados e a geração de predições de forma intuitiva.
+Além do modelo, o projeto inclui um **dashboard interativo em Streamlit**, permitindo que qualquer usuário envie dados de clientes em CSV e obtenha predições em tempo real, métricas de desempenho do modelo e visualizações intuitivas da distribuição de risco.
+
+Este trabalho demonstra habilidades avançadas em **ciência de dados aplicada a negócios**, incluindo **exploração de dados, engenharia de features, modelagem preditiva, avaliação de desempenho e deployment interativo**.
 
 ---
 
-## 🎯 Objetivos
+## 🎯 Objetivos do Projeto
 
-- Explorar e entender o comportamento dos clientes de telecom.
-- Pré-processar dados para análise e modelagem.
-- Treinar modelos de machine learning para prever churn.
-- Criar um aplicativo web interativo para gerar previsões em arquivos CSV.
-- Tornar os resultados replicáveis e facilmente acessíveis por qualquer usuário.
+- Explorar padrões de comportamento de clientes de telecom e identificar fatores que influenciam o churn.
+- Realizar **pré-processamento robusto** e engenharia de features para alimentar modelos de machine learning.
+- Treinar modelos supervisionados para **classificação binária de churn** e otimizar thresholds para diferentes cenários.
+- Desenvolver um **dashboard interativo** que possibilita:
+  - Upload de CSV para predições em tempo real.
+  - Ajuste de thresholds para classificação.
+  - Visualização de métricas de desempenho (precision, recall, F1-score, matriz de confusão).
+  - Análise da distribuição de probabilidade de churn para decisões estratégicas.
+- Garantir **reprodutibilidade** e **acessibilidade**, permitindo que qualquer stakeholder use o modelo sem necessidade de conhecimento técnico avançado.
 
 ---
 
 ## 📂 Estrutura do Repositório
 
-```
+```text
 telecom_churn_project/
-├── app.py # Aplicativo Streamlit principal
-├── model.pkl # Modelo treinado (Joblib)
-├── requirements.txt # Dependências do projeto
-├── data/ # Dados brutos e processados
-│ ├── raw/ # Dados originais
-│ └── processed/ # Dados tratados
-├── reports/ # Scripts auxiliares e análises exploratórias
-│ └── utils.py # Funções auxiliares
-└── README.md # Documentação do projeto
+├── app.py                # Aplicativo Streamlit principal
+├── model.pkl             # Modelo treinado (Joblib)
+├── x_columns.pkl         # Lista de colunas utilizadas no treino (para validação de CSV)
+├── requirements.txt      # Dependências do projeto
+├── data/                 # Dados brutos e processados
+│   ├── raw/              # Dados originais
+│   └── processed/        # Dados tratados para modelagem
+├── reports/              # Scripts auxiliares e análises exploratórias
+│   └── utils.py          # Funções utilitárias
+└── README.md             # Documentação do projeto
 ```
+## 🛠 Tecnologias e Bibliotecas
 
----
-
-## 🛠 Tecnologias e Bibliotecas Utilizadas
-
-- Python 3.13
-- Streamlit
-- Pandas
-- Scikit-learn
-- Joblib
-
----
+* Python 3.13
+* Streamlit – Dashboard interativo e deployment
+* Pandas / NumPy – Manipulação de dados
+* Scikit-learn – Modelagem preditiva e métricas
+* Joblib – Serialização do modelo e listas de features
+* Matplotlib / Seaborn (opcional) – Visualização complementa
 
 ## ⚙️ Como usar
-
-1. Clone o repositório:
-
-```bash
+1. Clonar o repositório
+```
 git clone https://github.com/seu-usuario/telecom_churn_project.git
 cd telecom_churn_project
 ```
-2. Instale as dependências:
-
+2. Instalar dependências
 ```
 pip install -r requirements.txt
 ```
-
-3. Execute o aplicativo Streamlit:
-
+3. Rodar o aplicativo Streamlit
 ```
 streamlit run app.py
 ```
-## Modelo
-O modelo preditivo foi treinado com base nos dados disponíveis da empresa de telecom, utilizando técnicas de machine learning supervisionado para classificação binária (Churn ou Não Churn). Ele está salvo no arquivo model.pkl e é carregado dinamicamente pelo aplicativo. O modelo é capaz de gerar probabilidades de churn para cada cliente, permitindo uma análise mais detalhada e a definição de thresholds personalizados para classificação.
+4. Uso do dashboard:
+- Faça upload de um arquivo CSV com os dados dos clientes (certifique-se de que as colunas correspondam às utilizadas no treinamento).
+- Ajuste o threshold de classificação conforme necessário.
+- Visualize as predições, métricas de desempenho e a distribuição de risco.
+- Analise a distribuição de probabilidades de churn para identificar clientes de alto risco e tomar decisões estratégicas.
 
-O dashboard interativo permite que os usuários explorem as métricas de desempenho do modelo, como matriz de confusão, precisão, recall e F1-score, além de visualizar a distribuição das probabilidades de churn. Isso facilita a tomada de decisões estratégicas para retenção de clientes e otimização de campanhas de marketing. 
+## 📈 Modelo
+O modelo foi treinado com técnicas de machine learning supervisionado para classificação binária (Churn ou Não Churn).
+Ele gera probabilidades de churn por cliente, permitindo:
+* Definir thresholds personalizados.
+* Avaliar impacto operacional (quantos clientes classificados como risco vs. churns reais capturados).
+* Tomada de decisão baseada em métricas robustas e visualizações interativas.
 
-Você também pode acessar o app pelo link: [https://projetochurn.streamlit.app](https://projetochurn.streamlit.app/) para experenciar a geração de predições em tempo real.
+## 🌐 Demonstração Online
+
+Você pode acessar o dashboard interativo e experimentar o envio de dados em tempo real:
+https://projetochurn.streamlit.app
+

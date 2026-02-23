@@ -9,23 +9,31 @@ import os
 # Configurações iniciais
 # -------------------------------
 st.set_page_config(page_title="Dashboard de Churn", layout="wide")
-
 st.title("📊 Dashboard de Churn - Telecom")
-st.write("Este app permite avaliar o modelo de churn e fazer predições em tempo real enviando arquivos CSV.")
+st.write("Faça upload de CSV para predições em tempo real ou ajuste o threshold do modelo com dados de teste.")
 
 # Slider de threshold
 threshold = st.slider("Escolha o Threshold", 0.0, 1.0, 0.5, 0.05)
 
 # -------------------------------
-# Carregar modelo
+# Carregar modelo e colunas
 # -------------------------------
 BASE_DIR = os.path.dirname(__file__)
-modelo_path = os.path.join(BASE_DIR, "model.pkl")
 
+# Modelo treinado
+modelo_path = os.path.join(BASE_DIR, "model.pkl")
 try:
     modelo = joblib.load(modelo_path)
 except FileNotFoundError:
     st.error(f"Modelo não encontrado em {modelo_path}")
+    st.stop()
+
+# Colunas usadas no treino
+x_columns_path = os.path.join(BASE_DIR, "x_columns.pkl")
+try:
+    x_columns = joblib.load(x_columns_path)
+except FileNotFoundError:
+    st.error(f"Lista de colunas do treino não encontrada em {x_columns_path}")
     st.stop()
 
 # -------------------------------
@@ -39,29 +47,36 @@ if uploaded_file:
     st.write("✅ Dados carregados:")
     st.dataframe(df_new.head())
 
-    # Predição em tempo real
-    try:
-        y_prob_new = modelo.predict_proba(df_new)[:,1]
-        y_pred_new = (y_prob_new >= threshold).astype(int)
-        df_new["Predição_Churn"] = y_pred_new
+    # Mantém apenas as colunas usadas no treino
+    missing_cols = [c for c in x_columns if c not in df_new.columns]
+    if missing_cols:
+        st.error(f"As seguintes colunas estão faltando no CSV enviado: {missing_cols}")
+    else:
+        df_new_clean = df_new[x_columns]  # mantém somente as colunas corretas
 
-        st.subheader("📈 Resultados das Predições")
-        st.dataframe(df_new.head())
+        # Predição em tempo real
+        try:
+            y_prob_new = modelo.predict_proba(df_new_clean)[:,1]
+            y_pred_new = (y_prob_new >= threshold).astype(int)
+            df_new["Predição_Churn"] = y_pred_new
 
-        st.write(f"Clientes classificados como risco: {y_pred_new.sum()}")
-        st.write(f"Clientes classificados como não risco: {len(y_pred_new) - y_pred_new.sum()}")
+            st.subheader("📈 Resultados das Predições")
+            st.dataframe(df_new.head())
 
-        # Gráfico de distribuição de risco
-        st.subheader("📊 Distribuição de Probabilidades")
-        st.bar_chart(pd.Series(y_prob_new, name="Probabilidade de Churn"))
+            st.write(f"Clientes classificados como risco: {y_pred_new.sum()}")
+            st.write(f"Clientes classificados como não risco: {len(y_pred_new) - y_pred_new.sum()}")
 
-    except Exception as e:
-        st.error(f"Erro ao gerar predições: {e}")
+            # Gráfico de distribuição de risco
+            st.subheader("📊 Distribuição de Probabilidades")
+            st.bar_chart(pd.Series(y_prob_new, name="Probabilidade de Churn"))
 
+        except Exception as e:
+            st.error(f"Erro ao gerar predições: {e}")
+
+# -------------------------------
+# Avaliação com dados de teste (fallback)
+# -------------------------------
 else:
-    # -------------------------------
-    # Avaliação com dados de teste
-    # -------------------------------
     try:
         x_test = joblib.load(os.path.join(BASE_DIR, "x_test.pkl"))
         y_test = joblib.load(os.path.join(BASE_DIR, "y_test.pkl"))
